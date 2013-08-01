@@ -10,19 +10,17 @@ use parent 'Exporter';
 
 our @EXPORT_OK = qw(with_return);
 
-use Scope::OnExit::Wrap;
-
 our $_backend;
 
 if (!$ENV{RETURN_MULTILEVEL_PP} && eval { require Scope::Upper }) {
 	*with_return = sub (&) {
 		my ($f) = @_;
-		my $ctx = Scope::Upper::HERE();
-		my $guard = on_scope_exit { $ctx = undef; };
+		my @ctx;
+		local $ctx[0] = Scope::Upper::HERE();
 		$f->(sub {
-			defined $ctx
+			defined $ctx[0]
 				or confess "Attempt to re-enter dead call frame";
-			Scope::Upper::unwind(@_, $ctx);
+			Scope::Upper::unwind(@_, $ctx[0]);
 		})
 	};
 
@@ -35,24 +33,24 @@ if (!$ENV{RETURN_MULTILEVEL_PP} && eval { require Scope::Upper }) {
 
 	*with_return = sub (&) {
 		my ($f) = @_;
-		my $label = __PACKAGE__ . '_' . $uniq;
+		my @label;
+		local $label[0] = __PACKAGE__ . '_' . $uniq;
 		local $uniq = $uniq + 1;
-		$label =~ tr/A-Za-z0-9_/_/cs;
+		$label[0] =~ tr/A-Za-z0-9_/_/cs;
 		my $r = sub {
-			defined $label
+			defined $label[0]
 				or confess "Attempt to re-enter dead call frame";
 			@ret = @_;
-			goto $label;
+			goto $label[0];
 		};
 		my $c = eval qq[
 #line ${\(__LINE__ + 2)} "${\__FILE__}"
 			sub {
 				return \$f->(\$r);
-				$label: splice \@ret
+				$label[0]: splice \@ret
 			}
 		];
 		die $@ if $@;
-		my $guard = on_scope_exit { $label = undef; };
 		$c->()
 	};
 

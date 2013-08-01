@@ -32,7 +32,6 @@ my %opt = (
 		'parent' => 0,
 		'Carp' => 0,
         'Exporter' => 0,
-        'Scope::OnExit::Wrap' => 0,
 	},
 
 	dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
