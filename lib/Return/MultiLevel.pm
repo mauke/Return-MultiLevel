@@ -6,7 +6,7 @@ use strict;
 our $VERSION = '0.01';
 
 use Carp qw(confess);
-use base 'Exporter';
+use parent 'Exporter';
 
 our @EXPORT_OK = qw(with_return);
 
