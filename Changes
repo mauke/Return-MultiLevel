@@ -1,5 +1,8 @@
 Revision history for Return-MultiLevel
 
+0.03    2013-08-06
+        - require 5.8 because 5.6 segfaults for some reason
+
 0.02    2013-08-01
         - drop dependency on Scope::OnExit::Wrap
 
