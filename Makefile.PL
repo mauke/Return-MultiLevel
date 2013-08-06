@@ -16,7 +16,7 @@ my %opt = (
 	LICENSE => 'perl',
 	PL_FILES => {},
 
-	MIN_PERL_VERSION => '5.6.0',
+	MIN_PERL_VERSION => '5.8.0',
 	CONFIGURE_REQUIRES => {
 		'strict' => 0,
 		'warnings' => 0,
