@@ -13,48 +13,48 @@ our @EXPORT_OK = qw(with_return);
 our $_backend;
 
 if (!$ENV{RETURN_MULTILEVEL_PP} && eval { require Scope::Upper }) {
-	*with_return = sub (&) {
-		my ($f) = @_;
-		my @ctx;
-		local $ctx[0] = Scope::Upper::HERE();
-		$f->(sub {
-			defined $ctx[0]
-				or confess "Attempt to re-enter dead call frame";
-			Scope::Upper::unwind(@_, $ctx[0]);
-		})
-	};
+    *with_return = sub (&) {
+        my ($f) = @_;
+        my @ctx;
+        local $ctx[0] = Scope::Upper::HERE();
+        $f->(sub {
+            defined $ctx[0]
+                or confess "Attempt to re-enter dead call frame";
+            Scope::Upper::unwind(@_, $ctx[0]);
+        })
+    };
 
-	$_backend = 'XS';
+    $_backend = 'XS';
 
 } else {
 
-	our $uniq = 0;
-	our @ret;
+    our $uniq = 0;
+    our @ret;
 
-	*with_return = sub (&) {
-		my ($f) = @_;
-		my @label;
-		local $label[0] = __PACKAGE__ . '_' . $uniq;
-		local $uniq = $uniq + 1;
-		$label[0] =~ tr/A-Za-z0-9_/_/cs;
-		my $r = sub {
-			defined $label[0]
-				or confess "Attempt to re-enter dead call frame";
-			@ret = @_;
-			goto $label[0];
-		};
-		my $c = eval qq[
+    *with_return = sub (&) {
+        my ($f) = @_;
+        my @label;
+        local $label[0] = __PACKAGE__ . '_' . $uniq;
+        local $uniq = $uniq + 1;
+        $label[0] =~ tr/A-Za-z0-9_/_/cs;
+        my $r = sub {
+            defined $label[0]
+                or confess "Attempt to re-enter dead call frame";
+            @ret = @_;
+            goto $label[0];
+        };
+        my $c = eval qq[
 #line ${\(__LINE__ + 2)} "${\__FILE__}"
-			sub {
-				return \$f->(\$r);
-				$label[0]: splice \@ret
-			}
-		];
-		die $@ if $@;
-		$c->()
-	};
+            sub {
+                return \$f->(\$r);
+                $label[0]: splice \@ret
+            }
+        ];
+        die $@ if $@;
+        $c->()
+    };
 
-	$_backend = 'PP';
+    $_backend = 'PP';
 }
 
 'ok'
