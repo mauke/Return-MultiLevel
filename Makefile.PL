@@ -18,20 +18,22 @@ my %opt = (
 
     MIN_PERL_VERSION => '5.8.0',
     CONFIGURE_REQUIRES => {
-        'strict' => 0,
-        'warnings' => 0,
+        'strict'              => 0,
+        'warnings'            => 0,
         'ExtUtils::MakeMaker' => '6.48',
     },
     BUILD_REQUIRES => {},
     TEST_REQUIRES => {
-        'Test::More' => 0,
+        'Test::More'  => 0,
+        'Test::Fatal' => 0,
     },
     PREREQ_PM => {
-        'warnings' => 0,
-        'strict' => 0,
-        'parent' => 0,
-        'Carp' => 0,
-        'Exporter' => 0,
+        'warnings'    => 0,
+        'strict'      => 0,
+        'parent'      => 0,
+        'Carp'        => 0,
+        'Data::Munge' => '0.07',
+        'Exporter'    => 0,
     },
 
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

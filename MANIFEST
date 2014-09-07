@@ -5,4 +5,5 @@ README
 lib/Return/MultiLevel.pm
 t/00-load.t
 t/basic.t
+t/debug.t
 t/nested.t
