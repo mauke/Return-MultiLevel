@@ -20,6 +20,9 @@ return {
         'strict'      => 0,
         'warnings'    => 0,
     },
+    RECOMMENDS => {
+        'Scope::Upper' => '0.29',
+    },
     DEVELOP_REQUIRES => {
         'Test::Pod' => 1.22,
     },
