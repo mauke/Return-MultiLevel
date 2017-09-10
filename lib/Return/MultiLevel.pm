@@ -3,7 +3,7 @@ package Return::MultiLevel;
 use warnings;
 use strict;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Carp qw(confess);
 use Data::Munge qw(eval_string);
