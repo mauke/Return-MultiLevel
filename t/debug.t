@@ -20,6 +20,7 @@ sub bar {
 }
 
 sub baz {
+    local $Carp::MaxArgNums = 2;
     my $f = shift;
     $f->(@_)
 }
@@ -30,10 +31,10 @@ my $exc = exception { baz $ret, 'ducks'; };
 like $exc, qr{
     .* \bwith_return\b .* \Q${\__FILE__}\E .* \b 14 \b .* \n
     .* \bfoo\b         .* \Q${\__FILE__}\E .* \b 19 \b .* \n
-    .* \bbar\b         .* \Q${\__FILE__}\E .* \b 27 \b .* \n
+    .* \bbar\b         .* \Q${\__FILE__}\E .* \b 28 \b .* \n
 }x;
 
 like $exc, qr{
-    .* \bReturn::MultiLevel\b .* \bducks\b .* \Q${\__FILE__}\E .* \b 24 \b .* \n
-    .* \bbaz\b                .* \bducks\b .* \Q${\__FILE__}\E .* \b 28 \b .* \n
+    .* \bReturn::MultiLevel\b .* \bducks\b .* \Q${\__FILE__}\E .* \b 25 \b .* \n
+    .* \bbaz\b                .* \bducks\b .* \Q${\__FILE__}\E .* \b 29 \b .* \n
 }x;
